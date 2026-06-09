@@ -1,138 +1,185 @@
 <div align="center">
-	<a href="https://frappe.io/hr">
-		<img src=".github/frappe-hr-logo.png" height="80px" width="80px" alt="Frappe HR Logo">
-	</a>
-	<h2>Frappe HR</h2>
-	<p align="center">
-		<p>Open Source, modern, and easy-to-use HR and Payroll Software</p>
-	</p>
-
-[![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/frappe/hrms/branch/develop/graph/badge.svg?token=0TwvyUg3I5)](https://codecov.io/gh/frappe/hrms)
-
-<a href="https://trendshift.io/repositories/10972" target="_blank"><img src="https://trendshift.io/api/badge/repositories/10972" alt="frappe%2Fhrms | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+	<img src="hrms.png" height="80px" width="80px" alt="FOBS Logo">
+	<h2>FOBS</h2>
+	<p>Open-source, modern, and easy-to-use HR and payroll software.</p>
 </div>
 
 <div align="center">
-	<img src=".github/hrms-hero.png"/>
+	<img src=".github/hrms-hero.png" alt="FOBS HR and Payroll">
 </div>
 
-<div align="center">
-	<a href="https://frappe.io/hr">Website</a>
-	-
-	<a href="https://docs.frappe.io/hr/introduction">Documentation</a>
-</div>
+## FOBS
 
-## Frappe HR
+FOBS is an HR and payroll management system for handling employee lifecycle, leave and attendance, expense claims, performance management, payroll, taxation, and mobile-first HR workflows from one place.
 
-Frappe HR has everything you need to drive excellence within the company. It's a complete HRMS solution with over 13 different modules right from Employee Management, Onboarding, Leaves, to Payroll, Taxation, and more!
-
-## Motivation
-When Frappe team started growing in terms of size, we needed an open-source HR and Payroll software. We didn't find any "true" open-source HR software out there and so decided to build one ourselves.
-Initially, it was a set of modules within ERPNext but version 14 onwards, as the modules became more mature, Frappe HR was created as a separate product.
+Repository: [jetithorgopi9/fobs_hrms](https://github.com/jetithorgopi9/fobs_hrms)
 
 ## Key Features
 
-- **Employee Lifecycle**: From onboarding employees, managing promotions and transfers, all the way to documenting feedback with exit interviews, make life easier for employees throughout their life cycle.
-- **Leave and Attendance**: Configure leave policies, pull regional holidays with a click, check-in and check-out with geolocation capturing, track leave balances and attendance with reports.
-- **Expense Claims and Advances**: Manage employee advances, claim expenses, configure multi-level approval workflows, all this with seamless integration with ERPNext accounting.
-- **Performance Management**: Track goals, align goals with key result areas (KRAs), enable employees to evaluate themselves, make managing appraisal cycles easy.
-- **Payroll & Taxation**: Create salary structures, configure income tax slabs, run standard payroll, accommodate additional salaries and off cycle payments, view income breakup on salary slips and so much more.
-- **Frappe HR Mobile App**: Apply for and approve leaves on the go, check-in and check-out, access employee profile right from the mobile app.
+- **Employee Lifecycle**: Manage onboarding, employee records, promotions, transfers, feedback, and exit processes.
+- **Leave and Attendance**: Configure leave policies, holidays, check-ins, attendance, leave balances, and attendance reports.
+- **Expense Claims and Advances**: Manage employee advances, expense claims, and approval workflows.
+- **Performance Management**: Track goals, KRAs, self-evaluations, appraisals, and review cycles.
+- **Payroll and Taxation**: Create salary structures, run payroll, manage income tax slabs, salary slips, additional salaries, and off-cycle payments.
+- **Mobile HR Workflows**: Apply for and approve leaves, check in and out, and access employee details on the go.
 
 <details open>
-
 <summary>View Screenshots</summary>
-	<img src=".github/hrms-appraisal.png"/>
-	<img src=".github/hrms-requisition.png"/>
-	<img src=".github/hrms-attendance.png"/>
-	<img src=".github/hrms-salary.png"/>
-	<img src=".github/hrms-pwa.png"/>
+
+<img src=".github/hrms-appraisal.png" alt="FOBS appraisal">
+<img src=".github/hrms-requisition.png" alt="FOBS requisition">
+<img src=".github/hrms-attendance.png" alt="FOBS attendance">
+<img src=".github/hrms-salary.png" alt="FOBS salary">
+<img src=".github/hrms-pwa.png" alt="FOBS mobile app">
+
 </details>
 
-### Under the Hood
+## Technology
 
-- [**Frappe Framework**](https://github.com/frappe/frappe): A full-stack web application framework written in Python and Javascript. The framework provides a robust foundation for building web applications, including a database abstraction layer, user authentication, and a REST API.
+- **Frappe Framework**: Full-stack web application framework written in Python and JavaScript.
+- **Frappe UI**: Vue-based UI components for modern single-page application interfaces.
+- **ERPNext compatibility**: Accounting and payroll-related workflows can integrate with ERPNext where configured.
 
-- [**Frappe UI**](https://github.com/frappe/frappe-ui): A Vue-based UI library, to provide a modern user interface. The Frappe UI library provides a variety of components that can be used to build single-page applications on top of the Frappe Framework.
+## Docker Development Setup
 
-## Production Setup
+You need Docker, Docker Compose, and Git installed.
 
-### Managed Hosting
-
-You can try [Frappe Cloud](https://frappecloud.com), a simple, user-friendly and sophisticated [open-source](https://github.com/frappe/press) platform to host Frappe applications with peace of mind.
-
-It takes care of installation, setup, upgrades, monitoring, maintenance and support of your Frappe deployments. It is a fully featured developer platform with an ability to manage and control multiple Frappe deployments.
-
-<div>
-	<a href="https://frappecloud.com/hrms/signup" target="_blank">
-		<picture>
-			<source media="(prefers-color-scheme: dark)" srcset="https://frappe.io/files/try-on-fc-white.png">
-			<img src="https://frappe.io/files/try-on-fc-black.png" alt="Try on Frappe Cloud" height="28" />
-		</picture>
-	</a>
-</div>
-
-
-## Development setup
-### Docker
-You need Docker, docker-compose and git setup on your machine. Refer [Docker documentation](https://docs.docker.com/). After that, run the following commands:
-```
-git clone https://github.com/frappe/hrms
-cd hrms/docker
-docker-compose up
+```sh
+git clone -b develop https://github.com/jetithorgopi9/fobs_hrms.git
+cd fobs_hrms/docker
+docker compose -p fobs_hrms up -d
 ```
 
-Wait for some time until the setup script creates a site. After that you can access `http://localhost:8000` in your browser and the login screen for HR should show up.
+After the setup script creates the site, open:
 
-Use the following credentials to log in:
+```text
+http://localhost:8000
+```
+
+Default login:
 
 - Username: `Administrator`
 - Password: `admin`
 
-### Local
+## VPS Deployment Without Affecting Existing Docker Sites
 
-1. Set up bench by following the [Installation Steps](https://frappeframework.com/docs/user/en/installation) and start the server and keep it running
-	```sh
-	$ bench start
-	```
-2. In a separate terminal window, run the following commands
-	```sh
-	$ bench new-site hrms.localhost
-	$ bench get-app erpnext
-	$ bench get-app hrms
-	$ bench --site hrms.localhost install-app hrms
-	$ bench --site hrms.localhost add-to-hosts
-	```
-3. You can access the site at `http://hrms.localhost:8080`
+Use a separate directory, a separate Docker Compose project name, and localhost-only ports. This prevents container names, networks, volumes, and public ports from colliding with the three Docker sites already running on the VPS.
 
-## Learning and Community
+Recommended isolation choices:
 
-1. [Frappe School](https://frappe.school) - Learn Frappe Framework and ERPNext from the various courses by the maintainers or from the community.
-2. [Documentation](https://docs.frappe.io/hr) - Extensive documentation for Frappe HR.
-3. [User Forum](https://discuss.erpnext.com/) - Engage with the community of ERPNext users and service providers.
-4. [Telegram Group](https://t.me/frappehr) - Get instant help from the community of users.
+- Compose project name: `fobs_hrms`
+- Host app port: `127.0.0.1:18000`
+- Host socket port: `127.0.0.1:19000`
+- Docker volume prefix: created automatically from the project name
 
+### Install on VPS
 
-## Contributing
+```sh
+cd /opt
+sudo git clone -b develop https://github.com/jetithorgopi9/fobs_hrms.git fobs_hrms
+sudo chown -R "$USER":"$USER" /opt/fobs_hrms
+cd /opt/fobs_hrms/docker
+```
 
-1. [Issue Guidelines](https://github.com/frappe/erpnext/wiki/Issue-Guidelines)
-1. [Report Security Vulnerabilities](https://erpnext.com/security)
-1. [Pull Request Requirements](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines)
+Create a VPS override file so the app does not bind to ports already used by production sites:
 
+```sh
+cat > docker-compose.vps.yml <<'EOF'
+services:
+  mariadb:
+    environment:
+      MYSQL_ROOT_PASSWORD: change_this_strong_root_password
 
-## Logo and Trademark Policy
+  frappe:
+    ports:
+      - "127.0.0.1:18000:8000"
+      - "127.0.0.1:19000:9000"
+EOF
+```
 
-Please read our [Logo and Trademark Policy](TRADEMARK_POLICY.md).
+Start only the FOBS stack:
 
-<br />
-<br />
-<div align="center" style="padding-top: 0.75rem;">
-	<a href="https://frappe.io" target="_blank">
-		<picture>
-			<source media="(prefers-color-scheme: dark)" srcset="https://frappe.io/files/Frappe-white.png">
-			<img src="https://frappe.io/files/Frappe-black.png" alt="Frappe Technologies" height="28"/>
-		</picture>
-	</a>
-</div>
+```sh
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml up -d
+```
 
+Check status and logs:
+
+```sh
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml ps
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml logs -f frappe
+```
+
+Open locally on the VPS:
+
+```text
+http://127.0.0.1:18000
+```
+
+### Connect Domain Through Existing Reverse Proxy
+
+Point a subdomain such as `fobs.example.com` to the VPS, then proxy it to `127.0.0.1:18000` from your existing Nginx, Caddy, Traefik, or Apache setup.
+
+Example Nginx server block:
+
+```nginx
+server {
+    listen 80;
+    server_name fobs.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:18000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Reload Nginx after testing the config:
+
+```sh
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### Safe Operations
+
+Stop only FOBS:
+
+```sh
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml stop
+```
+
+Restart only FOBS:
+
+```sh
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml restart
+```
+
+Update only FOBS:
+
+```sh
+cd /opt/fobs_hrms
+git pull origin develop
+cd docker
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml pull
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml up -d
+```
+
+Remove only FOBS containers and network, keeping the database volume:
+
+```sh
+docker compose -p fobs_hrms -f docker-compose.yml -f docker-compose.vps.yml down
+```
+
+Do not run `docker compose down` from another project directory, and do not run broad cleanup commands such as `docker system prune -a` on a production VPS unless you have confirmed every running site and backup.
+
+## Important Production Notes
+
+The bundled Docker setup is development-oriented. Before using FOBS as a production HR/payroll system, change default passwords, add HTTPS, configure backups, review email settings, and consider moving to a hardened production Frappe deployment.
+
+## License
+
+This project follows the license included in this repository.
