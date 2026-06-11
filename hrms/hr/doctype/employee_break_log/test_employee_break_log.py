@@ -9,6 +9,7 @@ from hrms.hr.doctype.employee_break_log.employee_break_log import (
 	start_employee_break,
 	stop_employee_break,
 )
+from hrms.api.break_management import get_break_status, start_break, stop_break
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -17,6 +18,9 @@ class TestEmployeeBreakLog(HRMSTestSuite):
 		frappe.db.delete("Employee Break Log")
 		frappe.db.delete("Break Type")
 		frappe.db.delete("Employee Checkin")
+
+	def tearDown(self):
+		frappe.set_user("Administrator")
 
 	def test_start_break_requires_first_checkin(self):
 		employee = make_employee("break_requires_checkin@example.com", company="_Test Company")
@@ -61,6 +65,37 @@ class TestEmployeeBreakLog(HRMSTestSuite):
 		break_log = start_employee_break(employee, break_type.name, datetime.combine(getdate(), get_time("10:55:00")))
 		self.assertEqual(break_log.status, "Active")
 
+	def test_get_break_status_uses_logged_in_employee(self):
+		user = make_user("break-status@example.com")
+		employee = make_employee("break-status@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "user_id", user)
+		break_type = make_break_type("Status Break")
+		checkin = make_checkin(employee, datetime.combine(getdate(), get_time("09:00:00")))
+
+		frappe.set_user(user)
+		status = get_break_status()
+
+		self.assertTrue(status["can_start_break"])
+		self.assertEqual(status["first_checkin"]["name"], checkin.name)
+		self.assertEqual(status["break_types"][0]["name"], break_type.name)
+
+	def test_start_and_stop_break_use_logged_in_employee(self):
+		user = make_user("break-api@example.com")
+		employee = make_employee("break-api@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "user_id", user)
+		break_type = make_break_type("API Break")
+		make_checkin(employee, datetime.combine(getdate(), get_time("09:00:00")))
+
+		frappe.set_user(user)
+		break_log = start_break(break_type.name, timestamp=datetime.combine(getdate(), get_time("11:00:00")))
+		self.assertEqual(break_log["employee"], employee)
+		self.assertEqual(break_log["status"], "Active")
+
+		break_log = stop_break(timestamp=datetime.combine(getdate(), get_time("11:15:00")))
+		self.assertEqual(break_log["employee"], employee)
+		self.assertEqual(break_log["status"], "Completed")
+		self.assertEqual(break_log["duration_minutes"], 15)
+
 
 def make_break_type(break_name, minimum_gap_after_previous_break_minutes=45):
 	return frappe.get_doc(
@@ -84,3 +119,20 @@ def make_checkin(employee, time, log_type="IN"):
 			"log_type": log_type,
 		}
 	).insert()
+
+
+def make_user(email):
+	if frappe.db.exists("User", email):
+		return email
+
+	frappe.get_doc(
+		{
+			"doctype": "User",
+			"email": email,
+			"first_name": email.split("@")[0],
+			"send_welcome_email": 0,
+			"enabled": 1,
+			"roles": [{"role": "Employee Self Service"}],
+		}
+	).insert(ignore_permissions=True)
+	return email
