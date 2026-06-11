@@ -10,6 +10,13 @@
 						</Button>
 					</router-link>
 				</div>
+				<div class="w-full">
+					<router-link :to="{ name: 'BreakManagementView' }" v-slot="{ navigate }">
+						<Button @click="navigate" variant="subtle" class="w-full py-5 text-base">
+							{{ __("Break Management") }}
+						</Button>
+					</router-link>
+				</div>
 				<div>
 					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Attendance Requests") }}</div>
 					<RequestList
