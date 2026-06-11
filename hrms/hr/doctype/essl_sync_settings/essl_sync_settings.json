@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "creation": "2026-06-11 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "sync_api_secret",
+  "employee_fieldname",
+  "skip_auto_attendance",
+  "last_sync_time"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "sync_api_secret",
+   "fieldtype": "Password",
+   "label": "Sync API Secret"
+  },
+  {
+   "default": "attendance_device_id",
+   "fieldname": "employee_fieldname",
+   "fieldtype": "Data",
+   "label": "Employee Fieldname",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "skip_auto_attendance",
+   "fieldtype": "Check",
+   "label": "Skip Auto Attendance"
+  },
+  {
+   "fieldname": "last_sync_time",
+   "fieldtype": "Datetime",
+   "label": "Last Sync Time",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "ESSL Sync Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

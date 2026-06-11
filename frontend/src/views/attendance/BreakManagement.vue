@@ -21,6 +21,18 @@
 						<span class="font-medium">{{ __("Active Break") }}: </span>
 						<span>{{ activeBreakLabel }}</span>
 					</div>
+
+					<Button
+						v-if="activeBreak"
+						variant="solid"
+						class="w-full py-5 text-base"
+						@click="openActiveBreakModal"
+					>
+						<template #prefix>
+							<FeatherIcon name="clock" class="w-4" />
+						</template>
+						{{ __("View Running Break") }}
+					</Button>
 				</div>
 
 				<div class="flex flex-col bg-white rounded p-4 gap-3">
@@ -40,9 +52,9 @@
 						<div
 							v-for="breakType in status.data?.break_types || []"
 							:key="breakType.name"
-							class="flex items-center justify-between border rounded p-3"
+							class="flex items-center justify-between border rounded p-3 gap-3"
 						>
-							<div>
+							<div class="min-w-0">
 								<div class="text-sm font-medium text-gray-900">
 									{{ breakType.break_name }}
 								</div>
@@ -50,6 +62,15 @@
 									{{ __("Next break gap: {0} minutes", [breakType.minimum_gap_after_previous_break_minutes || 45]) }}
 								</div>
 							</div>
+							<Button
+								variant="solid"
+								class="shrink-0"
+								:loading="startBreak.loading && selectedBreakType === breakType.name"
+								:disabled="startBreak.loading || stopBreak.loading"
+								@click="startSelectedBreak(breakType)"
+							>
+								{{ __("Start") }}
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -77,30 +98,162 @@
 			</div>
 		</template>
 	</BaseLayout>
+
+	<ion-modal
+		:is-open="isBreakModalOpen"
+		:initial-breakpoint="1"
+		:breakpoints="[0, 1]"
+		:backdrop-dismiss="false"
+		@didDismiss="handleBreakModalDismiss"
+	>
+		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
+			<div class="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+				<FeatherIcon name="coffee" class="h-7 w-7 text-gray-700" />
+			</div>
+
+			<div class="flex flex-col items-center gap-1 text-center">
+				<div class="text-sm font-medium text-gray-500">
+					{{ __("Break Running") }}
+				</div>
+				<div class="text-3xl font-bold text-gray-900 tabular-nums">
+					{{ activeBreakElapsed }}
+				</div>
+				<div class="text-base font-medium text-gray-900">
+					{{ activeBreak?.break_type }}
+				</div>
+				<div class="text-sm text-gray-500">
+					{{ __("Started at {0}", [formatTime(activeBreak?.start_time)]) }}
+				</div>
+			</div>
+
+			<Button
+				variant="solid"
+				class="w-full py-5 text-base"
+				:loading="stopBreak.loading"
+				:disabled="stopBreak.loading"
+				@click="stopActiveBreak"
+			>
+				{{ __("Stop Break") }}
+			</Button>
+		</div>
+	</ion-modal>
 </template>
 
 <script setup>
-import { computed, inject } from "vue"
-import { createResource } from "frappe-ui"
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from "vue"
+import { IonModal } from "@ionic/vue"
+import { Button, FeatherIcon, createResource, toast } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 
 const __ = inject("$translate")
 const dayjs = inject("$dayjs")
+const currentTime = ref(dayjs())
+const isBreakModalOpen = ref(false)
+const isStoppingBreak = ref(false)
+const selectedBreakType = ref("")
+let timer = null
 
 const status = createResource({
 	url: "hrms.api.break_management.get_break_status",
 	auto: true,
-	cache: "hrms:break-management-status",
 })
 
+const startBreak = createResource({
+	url: "hrms.api.break_management.start_break",
+	method: "POST",
+})
+
+const stopBreak = createResource({
+	url: "hrms.api.break_management.stop_break",
+	method: "POST",
+})
+
+const activeBreak = computed(() => status.data?.active_break)
+
 const activeBreakLabel = computed(() => {
-	if (!status.data?.active_break) return __("None")
+	if (!activeBreak.value) return __("None")
 	return __("{0} since {1}", [
-		status.data.active_break.break_type,
-		formatDateTime(status.data.active_break.start_time),
+		activeBreak.value.break_type,
+		formatDateTime(activeBreak.value.start_time),
 	])
 })
+
+const activeBreakElapsed = computed(() => {
+	if (!activeBreak.value?.start_time) return "00:00:00"
+
+	const elapsedSeconds = Math.max(
+		0,
+		currentTime.value.diff(dayjs(activeBreak.value.start_time), "second")
+	)
+
+	return formatElapsedTime(elapsedSeconds)
+})
+
+function startSelectedBreak(breakType) {
+	selectedBreakType.value = breakType.name
+	startBreak.submit(
+		{ break_type: breakType.name },
+		{
+			onSuccess() {
+				toast({
+					title: __("Success"),
+					text: __("Break started."),
+					icon: "check-circle",
+					position: "bottom-center",
+					iconClasses: "text-green-500",
+				})
+				selectedBreakType.value = ""
+				status.reload()
+				openActiveBreakModal()
+			},
+			onError(error) {
+				selectedBreakType.value = ""
+				showError(error)
+			},
+		}
+	)
+}
+
+function stopActiveBreak() {
+	isStoppingBreak.value = true
+	stopBreak.submit(
+		{},
+		{
+			onSuccess() {
+				toast({
+					title: __("Success"),
+					text: __("Break stopped."),
+					icon: "check-circle",
+					position: "bottom-center",
+					iconClasses: "text-green-500",
+				})
+				status.reload()
+				isBreakModalOpen.value = false
+				window.setTimeout(() => {
+					isStoppingBreak.value = false
+				}, 500)
+			},
+			onError(error) {
+				isStoppingBreak.value = false
+				showError(error)
+			},
+		}
+	)
+}
+
+function openActiveBreakModal() {
+	if (!activeBreak.value) return
+	isBreakModalOpen.value = true
+}
+
+function handleBreakModalDismiss() {
+	isBreakModalOpen.value = false
+
+	if (activeBreak.value && !isStoppingBreak.value) {
+		window.setTimeout(openActiveBreakModal, 0)
+	}
+}
 
 function formatLogTime(log) {
 	if (!log?.time) return __("Not available")
@@ -112,4 +265,51 @@ function formatDateTime(value) {
 	if (!value) return __("Not available")
 	return dayjs(value).format("D MMM YYYY, hh:mm A")
 }
+
+function formatTime(value) {
+	if (!value) return __("Not available")
+	return dayjs(value).format("hh:mm A")
+}
+
+function formatElapsedTime(seconds) {
+	const hours = Math.floor(seconds / 3600)
+	const minutes = Math.floor((seconds % 3600) / 60)
+	const remainingSeconds = seconds % 60
+
+	return [hours, minutes, remainingSeconds]
+		.map((part) => String(part).padStart(2, "0"))
+		.join(":")
+}
+
+function showError(error) {
+	const message = error.messages?.[0] || __("Break action failed.")
+
+	toast({
+		title: __("Error"),
+		text: message,
+		icon: "alert-circle",
+		position: "bottom-center",
+		iconClasses: "text-red-500",
+	})
+}
+
+watch(
+	activeBreak,
+	(value) => {
+		if (value) {
+			openActiveBreakModal()
+		}
+	},
+	{ immediate: true }
+)
+
+onMounted(() => {
+	timer = window.setInterval(() => {
+		currentTime.value = dayjs()
+	}, 1000)
+})
+
+onBeforeUnmount(() => {
+	if (timer) window.clearInterval(timer)
+})
 </script>
