@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-06-11 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "employee",
+  "employee_name",
+  "break_type",
+  "status",
+  "source",
+  "timing_section",
+  "start_time",
+  "stop_time",
+  "duration_minutes",
+  "links_section",
+  "linked_first_checkin",
+  "linked_last_checkout"
+ ],
+ "fields": [
+  {
+   "default": "BRK-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "BRK-.YYYY.-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "break_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Break Type",
+   "options": "Break Type",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nCompleted\nAuto Closed\nCancelled",
+   "reqd": 1
+  },
+  {
+   "default": "ESS Portal",
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "ESS Portal\nHR Desk\nAPI"
+  },
+  {
+   "fieldname": "timing_section",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stop_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Stop Time"
+  },
+  {
+   "fieldname": "duration_minutes",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Duration (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "links_section",
+   "fieldtype": "Section Break",
+   "label": "Linked Attendance Logs"
+  },
+  {
+   "fieldname": "linked_first_checkin",
+   "fieldtype": "Link",
+   "label": "Linked First Checkin",
+   "options": "Employee Checkin",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_last_checkout",
+   "fieldtype": "Link",
+   "label": "Linked Last Checkout",
+   "options": "Employee Checkin",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Break Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Supervisor",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee Self Service"
+  }
+ ],
+ "sort_field": "start_time",
+ "sort_order": "DESC",
+ "states": []
+}
