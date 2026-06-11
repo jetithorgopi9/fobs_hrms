@@ -93,16 +93,16 @@ def get_break_status(timestamp: str | None = None) -> dict:
 
 
 @frappe.whitelist()
-def start_break(break_type: str, timestamp: str | None = None) -> dict:
+def start_break(break_type: str) -> dict:
 	employee = get_current_employee()
-	break_log = start_employee_break(employee, break_type, timestamp, source="ESS Portal")
+	break_log = start_employee_break(employee, break_type, source="ESS Portal")
 	return serialize_break_log(break_log)
 
 
 @frappe.whitelist()
-def stop_break(timestamp: str | None = None) -> dict:
+def stop_break() -> dict:
 	employee = get_current_employee()
-	break_log = stop_employee_break(employee, timestamp)
+	break_log = stop_employee_break(employee)
 	return serialize_break_log(break_log)
 
 

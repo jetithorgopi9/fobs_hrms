@@ -87,14 +87,13 @@ class TestEmployeeBreakLog(HRMSTestSuite):
 		make_checkin(employee, datetime.combine(getdate(), get_time("09:00:00")))
 
 		frappe.set_user(user)
-		break_log = start_break(break_type.name, timestamp=datetime.combine(getdate(), get_time("11:00:00")))
+		break_log = start_break(break_type.name)
 		self.assertEqual(break_log["employee"], employee)
 		self.assertEqual(break_log["status"], "Active")
 
-		break_log = stop_break(timestamp=datetime.combine(getdate(), get_time("11:15:00")))
+		break_log = stop_break()
 		self.assertEqual(break_log["employee"], employee)
 		self.assertEqual(break_log["status"], "Completed")
-		self.assertEqual(break_log["duration_minutes"], 15)
 
 
 def make_break_type(break_name, minimum_gap_after_previous_break_minutes=45):
